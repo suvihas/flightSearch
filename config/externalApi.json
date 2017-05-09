@@ -1,0 +1,7 @@
+{
+  "apiPaths": {
+    "airlines": "http://node.locomote.com/code-task/airlines",
+    "airports": "http://node.locomote.com/code-task/airports?q=",
+    "flightSearch": "http://node.locomote.com/code-task/flight_search/"
+  }
+}
