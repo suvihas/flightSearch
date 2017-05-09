@@ -17,7 +17,7 @@ This is a simple implementation of FlightSearch using Node+Express backend which
 
   Accepts below query parameters
   
-  - date - in format MM-DD-YYYY.
+  - date - in format YYYY-MM-DD.
   
   - from - Source city name.
   
