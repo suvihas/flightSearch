@@ -26,6 +26,9 @@ Airlines.prototype.getAirlines = function() {
       if (error) {
         res.status(error.status || 400).send(error.message || 'Internal Server Error');
       }
+      if (!airlinesData) {
+        res.status(400).send('No Airlines found');
+      }
       res.status(200).json(airlinesData);
     });
   }

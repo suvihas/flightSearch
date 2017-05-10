@@ -13,14 +13,18 @@ var searchFlights = function() {
   return function(req, res, next) {
     var query = req.query;
     var date = req.query.date;
+
     if (!query || !query.date || !query.from || !query.to) {
-      return res.status(400).send('request params not correct!!!!');
+      return res.status(400).send('Request params not correct!!');
     }
     //get airport codes for from and to locations
     getAirportCode(req.query.from, function(error, fromLocations) {
+      if (error || !fromLocations) {
+        return res.status(400).send('No Airports found in Source!!');
+      }
       getAirportCode(req.query.to, function(error, toLocations) {
-        if ((fromLocations.length == 0) || (toLocations.length == 0)) {
-          return res.status(400).send('No airports found in the city');
+        if (error || !toLocations) {
+          return res.status(400).send('No Airports found in Destination!!');
         }
         //get list of all airlines
         airlines.fetchAirlinesFromAPI(function(error, airlineData) {
@@ -28,10 +32,17 @@ var searchFlights = function() {
             console.log(error);
             return res.status(error.status || 400).send(error.message || 'Internal Server Error');
           }
+          if (!airlineData) {
+            return res.status(400).send('No Airlines found');
+          }
           fetchFlights(airlineData, fromLocations, toLocations, date, function(error, flightsData) {
             if (error) {
               console.log(error);
               return res.status(error.status || 400).send(error.message || 'Internal Server Error');
+            }
+            if (!flightsData) {
+              console.log('No flightsData received');
+              return res.status(400).send('No flights found!!');
             }
             return res.status(200).json(flightsData);
           });
@@ -77,7 +88,6 @@ function fetchFlights(airlineData, fromList, toList, date, cb) {
     });
   }, function(err) {
     //return the final result set
-    //console.log("Final resultset length: " + flightsData.length);
     return cb(null, flightsData);
   });
 }
@@ -89,9 +99,6 @@ function getAirportCode(city, cb) {
   airports.fetchAirportsFromAPI(city, function(err, airportList) {
     if (err || airportList.length === 0) {
       return cb(err);
-    }
-    if (airportList.length === 0) {
-      return cb(new Error("No Airports found"));
     }
     var airportCodes = [];
     for (var i = 0; i < airportList.length; i++) {
