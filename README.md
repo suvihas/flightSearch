@@ -25,6 +25,8 @@ This is a simple implementation of FlightSearch using Node+Express backend which
 
   eg: /search?date=2017-05-10&from=Melbourne&to=Sydney
 
+  Note: The date format must be matching to YYYY-MM-DD, else the server will crash sometimes.
+
 ## To run the project
 
 ```sh
